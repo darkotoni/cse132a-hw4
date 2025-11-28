@@ -1,7 +1,9 @@
-SELECT DISTINCT p.pname, comment AS matching_comment
-FROM Product p
-JOIN Review r ON p.pid = r.pid
-CROSS JOIN LATERAL unnest(r.comments) AS comment
-WHERE p.category = 'electronics'
-  AND comment ~* '(defect|broken)'
-ORDER BY p.pname, matching_comment;
+This query demonstrates array processing combined with joins and regex filtering.
+
+First, we join Product and Review tables on the pid foreign key to connect products with their reviews.
+
+The key operation is unnest(r.comments), which expands the TEXT[] array into individual rows, one for each comment. We use CROSS JOIN LATERAL to apply unnest to each review row.
+
+We filter for products in the 'electronics' category and use the regex pattern '(defect|broken)' with ~* (case-insensitive) to find comments containing either word.
+
+DISTINCT ensures we don't show duplicate pname/comment pairs if the same comment appears multiple times, and we order the results for consistent output.

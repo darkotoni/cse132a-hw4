@@ -1,17 +1,9 @@
-WITH RECURSIVE paths AS (
-  -- Base case: start from 'home'
-  SELECT source AS src, target AS tgt
-  FROM PageLinks
-  WHERE source = 'home'
-  
-  UNION
-  
-  -- Recursive case: follow links from reachable pages
-  SELECT p.tgt AS src, pl.target AS tgt
-  FROM paths p
-  JOIN PageLinks pl ON p.tgt = pl.source
-)
-SELECT DISTINCT tgt AS reachable_page
-FROM paths
-WHERE tgt ~* '(ref|polic)'
-ORDER BY reachable_page;
+This query combines recursive traversal with regex pattern matching to find specific reachable pages.
+
+The recursive CTE 'paths' starts with all pages directly linked from 'home' as the base case.
+
+The recursive step joins the current set of reachable pages with PageLinks to find pages reachable from those pages, effectively doing a graph traversal from 'home'.
+
+After building the complete set of reachable pages, we filter using the regex pattern '(ref|polic)' with the ~* operator (case-insensitive match). This finds pages whose names contain either 'ref' or 'polic' as substrings.
+
+The DISTINCT ensures we don't return duplicate page names if multiple paths lead to the same page.
