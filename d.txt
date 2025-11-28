@@ -1,0 +1,11 @@
+This query combines all three key concepts: recursive CTEs, regex pattern matching, and array processing.
+
+The recursive CTE 'Subtopics' starts with the 'Support' topic as the base case. The recursive step finds all topics whose parent_tid matches a topic already in Subtopics, effectively traversing down the topic hierarchy to find all descendants.
+
+We then join Subtopics with Discussion to get all discussions under these topics. Using CROSS JOIN LATERAL unnest(d.messages), we expand each message array into individual rows.
+
+The regex filter '(refund|return)' with ~* (case-insensitive) identifies messages containing either word as a substring.
+
+DISTINCT ensures we don't return duplicate topic/message pairs, and ORDER BY provides consistent output ordering.
+
+This effectively finds all discussions in the Support subtree that mention refunds or returns.

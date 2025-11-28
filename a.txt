@@ -1,0 +1,9 @@
+This query uses a recursive CTE named Hierarchy to traverse the employee-manager relationship tree.
+
+The base case starts with all employees who have a manager (WHERE managerid IS NOT NULL), selecting their name and manager ID.
+
+The recursive case then joins the Hierarchy result back to the Employee table on managerid = eid to climb up the management chain. This continues until we reach employees with no manager (the top of the hierarchy).
+
+Finally, we join the Hierarchy CTE with the Employee table to get the actual manager names, and order the results by employee_name and manager_name as required.
+
+This effectively gives us all direct and indirect reporting relationships in the organization.
